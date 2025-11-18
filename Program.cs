@@ -96,7 +96,7 @@ builder.Services.AddCors(opt =>
     opt.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("https://your-frontend.vercel.app","http://localhost:4200")
+            .WithOrigins("https://ecommerce-hoi8d925b-kilari-rohiths-projects.vercel.app")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
