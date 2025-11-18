@@ -85,7 +85,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         // GET: api/orders/my
-       // GET: api/orders/my
+       
 [HttpGet("my")]
 public async Task<ActionResult<PaginatedResult<OrderDto>>> MyOrders(
     [FromQuery] int page = 1,
@@ -151,7 +151,7 @@ public async Task<ActionResult<PaginatedResult<OrderDto>>> MyOrders(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10)
         {
-            // Ensure page size doesn't exceed 50 for performance
+            
             if (pageSize > 50) pageSize = 50;
             if (page < 1) page = 1;
 

@@ -13,6 +13,7 @@ namespace Ecommerce.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -101,25 +102,25 @@ namespace Ecommerce.Api.Controllers
             };
         }
 
-        // ============= FORGOT PASSWORD (SEND OTP TO EMAIL) ============
+       
         [HttpPost("forgot")]
         [AllowAnonymous]
         public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            // Always respond OK to avoid leaking which emails exist
+            
             if (user == null)
             {
                 return Ok(new { message = "If that email exists, an OTP has been sent." });
             }
 
-            // Generate 6-digit OTP
+            
             var rng = RandomNumberGenerator.Create();
             var bytes = new byte[4];
             rng.GetBytes(bytes);
             var code = BitConverter.ToUInt32(bytes, 0) % 1000000;
-            var otp = code.ToString("D6"); // 000000 - 999999
+            var otp = code.ToString("D6"); 
 
             user.PasswordResetToken = otp;
             user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(10);
@@ -144,7 +145,7 @@ namespace Ecommerce.Api.Controllers
             return Ok(new { message = "If that email exists, an OTP has been sent." });
         }
 
-        // ============= RESET PASSWORD WITH OTP ============
+        
         [HttpPost("reset")]
         [AllowAnonymous]
         public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
@@ -163,12 +164,12 @@ namespace Ecommerce.Api.Controllers
                 return BadRequest("Invalid or expired OTP.");
             }
 
-            // Set new password
+            
             using var hmac = new HMACSHA256();
             user.PasswordSalt = hmac.Key;
             user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(request.NewPassword));
 
-            // Clear OTP
+            
             user.PasswordResetToken = null;
             user.PasswordResetExpiry = null;
 

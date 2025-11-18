@@ -46,7 +46,7 @@ namespace Ecommerce.Api.Controllers
         }
 
         // GET: api/cart
-        // Returns the full cart for the authenticated user (no paging).
+        
         [HttpGet]
         public async Task<ActionResult<CartDto>> GetCart([FromQuery] string? search = null)
         {
@@ -64,7 +64,7 @@ namespace Ecommerce.Api.Controllers
                 await _db.SaveChangesAsync();
             }
 
-            // Query CartItems directly from DbSet so EF async methods work correctly.
+           
             var query = _db.CartItems
                 .Include(i => i.Product)
                 .Where(i => i.CartId == cart.Id);

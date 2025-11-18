@@ -51,7 +51,7 @@ public class ResetPasswordRequest
     public string Email { get; set; } = "";
 
     [Required]
-    public string Token { get; set; } = ""; // this is the OTP
+    public string Token { get; set; } = ""; 
 
     [Required]
     [MinLength(6)]

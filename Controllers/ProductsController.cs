@@ -9,6 +9,7 @@ namespace Ecommerce.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly AppDbContext _db;
@@ -27,13 +28,13 @@ namespace Ecommerce.Api.Controllers
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 12)
         {
-            // Ensure page size doesn't exceed 50 for performance
+            
             if (pageSize > 50) pageSize = 50;
             if (page < 1) page = 1;
 
             var query = _db.Products.AsQueryable();
 
-            // Apply search filter if provided
+            
             if (!string.IsNullOrWhiteSpace(search))
             {
                 var searchTerm = search.Trim().ToLower();

@@ -43,7 +43,7 @@ namespace Ecommerce.Api.Dtos
         public IFormFile? ImageFile { get; set; }
     }
 
-    // For UPDATE – also multipart/form-data
+    
     public class UpdateProductDto
     {
         [Required]
@@ -60,7 +60,7 @@ namespace Ecommerce.Api.Dtos
         [Range(0, int.MaxValue)]
         public int Stock { get; set; }
 
-        // only send when changing image
+        
         public IFormFile? ImageFile { get; set; }
     }
 }
