@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Controllers
 builder.Services.AddControllers();
 
 // Swagger + JWT support
@@ -20,14 +22,12 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
-    // file upload (IFormFile)
     c.MapType<IFormFile>(() => new OpenApiSchema
     {
         Type = "string",
         Format = "binary"
     });
 
-    // JWT for Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -54,17 +54,14 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Password reset smpt email sender
+// Email sender
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
 // DB
- builder.Services.AddDbContext<AppDbContext>(opt =>
-     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-
-// JWT Settings + Service
+// JWT
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<IJwtService, JwtService>();
 
@@ -90,13 +87,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// CORS for Angular
+// CORS
 var allowedOrigins = new[]
 {
     "https://ecommerce-two-gilt-82.vercel.app",
     "https://ecommerce-git-main-kilari-rohiths-projects.vercel.app",
     "https://ecommerce-hoi8d925b-kilari-rohiths-projects.vercel.app",
-    "http://localhost:4200" 
+    "http://localhost:4200"
 };
 
 builder.Services.AddCors(options =>
@@ -109,20 +106,19 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Swagger in all envs
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ecommerce API v1");
+});
 
-app.UseHttpsRedirection();
+// ❌ no UseHttpsRedirection here
 
 app.UseCors("AllowFrontend");
 
-// Static files for images
 app.UseStaticFiles();
 
 app.UseAuthentication();
