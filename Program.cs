@@ -91,17 +91,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // CORS for Angular
-builder.Services.AddCors(opt =>
+var allowedOrigins = new[]
 {
-    opt.AddPolicy("AllowFrontend", policy =>
+    "https://ecommerce-two-gilt-82.vercel.app",
+    "https://ecommerce-git-main-kilari-rohiths-projects.vercel.app",
+    "https://ecommerce-hoi8d925b-kilari-rohiths-projects.vercel.app",
+    "http://localhost:4200" 
+};
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy
-            .WithOrigins("https://ecommerce-hoi8d925b-kilari-rohiths-projects.vercel.app")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+        policy.WithOrigins(allowedOrigins)
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
+
 
 var app = builder.Build();
 
@@ -110,6 +117,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
